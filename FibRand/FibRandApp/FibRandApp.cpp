@@ -7,6 +7,7 @@
 #include <vector>
 
 using namespace std;
+const double leo = 1.1319882487943;
 double GetGoldenRatio()
 {
     return (1.0 + std::sqrt(5.0)) / 2.0;
@@ -18,14 +19,20 @@ double GetGrowthRate(double gr, double value)
     auto c = std::sqrt(5.0);
     return (a - b) / c;
 }
-double CalculateFibonacci(int value, unsigned long& iteration, double& n_1, double& n_2, double gr)
+long long CalculateFibonacci(int value, unsigned long& iteration, long long& n_1, long long& n_2, double gr, long long& max)
 {
-    double fib = value ? n_1 + n_2 : n_1 - n_2;
-    double result = abs(fib / n_1);
+    long long fib = abs(value ? n_1 + n_2 : n_1 - n_2);
+    //if(!isfinite(fib))
+    //{
+    //    long double div = std::pow(10, 20);
+    //    n_1 /= div;
+    //    n_2 /= div;
+    //    fib = value ? n_1 + n_2 : n_1 - n_2;
+    //}
     n_2 = n_1;
     n_1 = fib;
     iteration++;
-    return result;
+    return fib;
 }
 vector<char> GetBytes(string path)
 {
@@ -60,21 +67,23 @@ int main(int c, char* v[])
     {
         auto bytes = GetBytes(v[2]);
         unsigned long counter = 1;
-        double n_1 = 1, n_2 = 1;
+        long long n_1 = 1, n_2 = 1, max = 1;
         for (int i = 0; i < bytes.size(); i++)
         {
             for(int b = 0; b<8; b++)
             {
-                auto val = CalculateFibonacci((bytes[i] >> b) & 0b00000001, counter, n_1, n_2, gr);
-                if(counter % 100 == 0)
-                    cout << val << "\n";
+                long long val = CalculateFibonacci((bytes[i] >> b) & 0b00000001, counter, n_1, n_2, gr, max);
+                max = std::max(max, val);
+                double pow_val = std::pow((double)val, 1.0 / (double)counter);
+                cout << pow_val << " (" << pow_val - leo << ")\n";
+                std::cin.get();
             }
         }
     }
     else if(op == "write")
     {
         vector<unsigned char> bytes;
-        for (int i = 0; i < 10000000; i++)
+        for (int i = 0; i < 100000000; i++)
         {
             bytes.push_back(rand());
         }

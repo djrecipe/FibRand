@@ -75,7 +75,7 @@ int main(int c, char* v[])
                 long long val = CalculateFibonacci((bytes[i] >> b) & 0b00000001, counter, n_1, n_2, gr, max);
                 max = std::max(max, val);
                 double pow_val = std::pow((double)val, 1.0 / (double)counter);
-                cout << pow_val << " (" << pow_val - leo << ")\n";
+                cout << pow_val << " (" << (std::abs(pow_val - leo)/leo)*100.0 << "%)\n";
                 std::cin.get();
             }
         }
